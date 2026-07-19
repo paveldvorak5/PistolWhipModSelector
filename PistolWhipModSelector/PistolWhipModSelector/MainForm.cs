@@ -13,11 +13,17 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace PistolWhipModSelector
 {
     public partial class MainForm : Form
     {
+        private void Log(string message)
+        {
+            try { Trace.WriteLine($"[MainForm] {message}"); } catch { }
+        }
+
         private List<AudioLineProperties> audioLines = null;
         private ModsFolder modsFolder = null;
         private Player.BassAudioPlayer audioPlayer = null;
@@ -25,6 +31,8 @@ namespace PistolWhipModSelector
         private Button stopButton = null;
         private System.Windows.Forms.Timer playbackTimer = null;
         private bool isUserSeeking = false;
+        private double observedMaxPosition = 0.0;
+        private bool skipMouseUpSeek = false; // no-op to ensure patch tool state
 
         // Win32 helpers for native loader diagnostics
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -79,6 +87,20 @@ namespace PistolWhipModSelector
             this.playbackTimer = new System.Windows.Forms.Timer();
             this.playbackTimer.Interval = 500;
             this.playbackTimer.Tick += PlaybackTimer_Tick;
+            Log("Playback timer created, interval=500ms");
+
+            // Ensure duration label is visible and placed near the playback control
+            try
+            {
+                this.lblDuration.AutoSize = true;
+                this.lblDuration.ForeColor = Color.Black;
+                this.lblDuration.Text = "00:00 / 00:00";
+                // place below the trackbar so it's always visible
+                this.lblDuration.Location = new Point(this.playbackTrackBar.Left, this.playbackTrackBar.Bottom + 2);
+                this.lblDuration.BringToFront();
+                this.lblDuration.Visible = true;
+            }
+            catch { }
         }
         private void ReloadAllButton_Click(object sender, EventArgs e)
         {
@@ -196,7 +218,7 @@ namespace PistolWhipModSelector
             this.ChangeState($"\"{selectedAudio.AudioNameID}\" selected!", Color.Green);
 
             string originalPath = Path.Combine(GlobalVariables.OriginalSongsFolderPath, selectedAudio.ID + ".wem");
-            PlayAudioFile(originalPath);
+            _ = PlayAudioFileAsync(originalPath);
         }
 
         private void CustomSongsDataGridView_DragDrop(object sender, DragEventArgs e)
@@ -585,21 +607,75 @@ namespace PistolWhipModSelector
             CopyStateLabel.ForeColor = color;
         }
 
-        private void PlayButton_Click(object sender, EventArgs e)
+        private string GetCachedConvertedPath(string sourcePath)
         {
-            PlayAudioFile(this.GetDestinationPath());
+            try
+            {
+                string cacheDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PistolWhipModSelector", "converted_cache");
+                Directory.CreateDirectory(cacheDir);
+                long ticks = File.GetLastWriteTimeUtc(sourcePath).Ticks;
+                string key = sourcePath + "|" + ticks.ToString();
+                using (var sha = SHA1.Create())
+                {
+                    byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(key));
+                    string hex = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    return Path.Combine(cacheDir, hex + ".wav");
+                }
+            }
+            catch { return Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".wav"); }
         }
 
-        private void PlayAudioFile(string path)
+        private async void PlayButton_Click(object sender, EventArgs e)
+        {
+            await PlayAudioFileAsync(this.GetDestinationPath()).ConfigureAwait(false);
+        }
+
+        private async Task PlayAudioFileAsync(string path)
         {
             if (String.IsNullOrWhiteSpace(path) || !File.Exists(path) || this.audioPlayer == null)
                 return;
 
             try
             {
-                this.audioPlayer.Play(path);
+                string playPath = path;
+
+                // convert WEM files to WAV first because some WEM streams don't expose duration
+                if (path.EndsWith(".wem", StringComparison.OrdinalIgnoreCase))
+                {
+                    string cachePath = GetCachedConvertedPath(path);
+                    if (File.Exists(cachePath))
+                    {
+                        playPath = cachePath;
+                    }
+                    else
+                    {
+                        // show marquee progress
+                        try { this.conversionProgressBar.Visible = true; } catch { }
+                        try
+                        {
+                            await Task.Run(() => this.audioPlayer.SaveAsWav(path, cachePath)).ConfigureAwait(false);
+                            playPath = cachePath;
+                            Log($"PlayButton: conversion finished, playing cached file {cachePath}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log("PlayButton: conversion failed: " + ex.Message);
+                            playPath = path; // fallback
+                        }
+                        finally
+                        {
+                            try { this.Invoke(new Action(() => this.conversionProgressBar.Visible = false)); } catch { }
+                        }
+                    }
+                }
+
+                // play
+                try { this.Invoke(new Action(() => this.audioPlayer.Play(playPath))); } catch { this.audioPlayer.Play(playPath); }
+                Log($"PlayButton: started playing path={playPath}");
                 try { this.playbackTrackBar.Value = 0; } catch { }
-                this.playbackTimer.Start();
+                observedMaxPosition = 0.0;
+                try { this.Invoke(new Action(() => this.playbackTimer.Start())); } catch { this.playbackTimer.Start(); }
+                Log("PlayButton: playbackTimer started");
             }
             catch (Exception ex)
             {
@@ -612,8 +688,12 @@ namespace PistolWhipModSelector
             try
             {
                 this.audioPlayer.Stop();
+                Log("StopButton: audioPlayer stopped");
                 this.playbackTimer.Stop();
+                Log("StopButton: playbackTimer stopped");
                 try { this.playbackTrackBar.Value = 0; } catch { }
+                observedMaxPosition = 0.0;
+                // no temporary deletion needed; cached converted files persist
             }
             catch (Exception ex)
             {
@@ -628,23 +708,66 @@ namespace PistolWhipModSelector
             {
                 double duration = this.audioPlayer.GetDuration();
                 double position = this.audioPlayer.GetPosition();
-                if (duration > 0 && !Double.IsNaN(duration) && !Double.IsInfinity(duration))
+                const int sliderMaximum = 1000;
+                if (this.playbackTrackBar.Maximum != sliderMaximum)
+                    this.playbackTrackBar.Maximum = sliderMaximum;
+
+                try
+                {
+                    int val = 0;
+                    if (duration > 0 && !Double.IsNaN(duration) && !Double.IsInfinity(duration))
+                    {
+                        val = (int)Math.Round(position / duration * sliderMaximum);
+                    }
+                    else
+                    {
+                        // duration unknown: use adaptive observed max position so slider still moves
+                        if (position > observedMaxPosition) observedMaxPosition = position;
+                        double denom = observedMaxPosition > 0.0 ? observedMaxPosition : 1.0;
+                        val = (int)Math.Round(position / denom * sliderMaximum);
+                    }
+
+                    if (val < 0) val = 0;
+                    if (val > sliderMaximum) val = sliderMaximum;
+
+                    this.playbackTrackBar.Value = val;
+
+                    // update duration label
+                    try
+                    {
+                        TimeSpan posTs = TimeSpan.FromSeconds(position);
+                        double durSec = duration > 0 ? duration : (observedMaxPosition > 0 ? observedMaxPosition : 0.0);
+                        TimeSpan durTs = TimeSpan.FromSeconds(durSec);
+                        string text = posTs.ToString(@"mm\:ss") + " / " + durTs.ToString(@"mm\:ss");
+                        try { this.lblDuration.Text = text; } catch { }
+                    }
+                    catch { }
+                }
+                catch { }
+            }
+            catch (Exception ex) { Log("PlaybackTimer_Tick: exception: " + ex.Message); }
+        }
+
+        private void playbackTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                if (e.Button == MouseButtons.Left)
                 {
                     const int sliderMaximum = 1000;
                     if (this.playbackTrackBar.Maximum != sliderMaximum)
                         this.playbackTrackBar.Maximum = sliderMaximum;
 
-                    int val = (int)Math.Round(position / duration * sliderMaximum);
+                    double ratio = e.X / (double)Math.Max(1, this.playbackTrackBar.Width);
+                    int val = (int)Math.Round(ratio * this.playbackTrackBar.Maximum);
                     if (val < 0) val = 0;
-                    if (val > sliderMaximum) val = sliderMaximum;
-                    this.playbackTrackBar.Value = val;
+                    if (val > this.playbackTrackBar.Maximum) val = this.playbackTrackBar.Maximum;
+
+                    try { this.playbackTrackBar.Value = val; } catch { }
+                    // update visual position; actual seek will occur on MouseUp to support dragging
                 }
             }
             catch { }
-        }
-
-        private void playbackTrackBar_MouseDown(object sender, MouseEventArgs e)
-        {
             this.isUserSeeking = true;
         }
 
@@ -658,12 +781,15 @@ namespace PistolWhipModSelector
                     double seconds = duration * this.playbackTrackBar.Value / this.playbackTrackBar.Maximum;
                     this.audioPlayer.Seek(seconds);
                 }
+                else
+                {
+                    // duration unknown: use observed max fallback
+                    double seconds = (observedMaxPosition > 0.0 ? observedMaxPosition * this.playbackTrackBar.Value / this.playbackTrackBar.Maximum : 0.0);
+                    this.audioPlayer.Seek(seconds);
+                }
             }
             catch { }
-            finally
-            {
-                this.isUserSeeking = false;
-            }
+            finally { this.isUserSeeking = false; }
         }
 
         private void playbackTrackBar_Scroll(object sender, EventArgs e)

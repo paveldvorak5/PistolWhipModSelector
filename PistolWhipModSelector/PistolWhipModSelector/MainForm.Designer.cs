@@ -194,6 +194,8 @@
             // playbackTrackBar
             // 
             this.playbackTrackBar = new System.Windows.Forms.TrackBar();
+            this.conversionProgressBar = new System.Windows.Forms.ProgressBar();
+            this.lblDuration = new System.Windows.Forms.Label();
             this.playbackTrackBar.Location = new System.Drawing.Point(540, 12);
             this.playbackTrackBar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             this.playbackTrackBar.Name = "playbackTrackBar";
@@ -205,6 +207,21 @@
             this.playbackTrackBar.Scroll += new System.EventHandler(this.playbackTrackBar_Scroll);
             this.playbackTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.playbackTrackBar_MouseDown);
             this.playbackTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.playbackTrackBar_MouseUp);
+
+            // conversionProgressBar
+            this.conversionProgressBar.Location = new System.Drawing.Point(540, 60);
+            this.conversionProgressBar.Name = "conversionProgressBar";
+            this.conversionProgressBar.Size = new System.Drawing.Size(120, 10);
+            this.conversionProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.conversionProgressBar.MarqueeAnimationSpeed = 30;
+            this.conversionProgressBar.Visible = false;
+
+            // lblDuration
+            this.lblDuration.Location = new System.Drawing.Point(708, 12);
+            this.lblDuration.Name = "lblDuration";
+            this.lblDuration.Size = new System.Drawing.Size(100, 23);
+            this.lblDuration.Text = "00:00 / 00:00";
+            this.lblDuration.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 
             // 
             // MainForm
@@ -224,6 +241,8 @@
             this.Controls.Add(this.PlayButton);
             this.Controls.Add(this.StopButton);
             this.Controls.Add(this.playbackTrackBar);
+            this.Controls.Add(this.conversionProgressBar);
+            this.Controls.Add(this.lblDuration);
             this.Name = "MainForm";
             this.Load += new System.EventHandler(this.MainForm_Load);
 
@@ -251,5 +270,7 @@
         private System.Windows.Forms.Button PlayButton;
         private System.Windows.Forms.Button StopButton;
         private System.Windows.Forms.TrackBar playbackTrackBar;
+        private System.Windows.Forms.ProgressBar conversionProgressBar;
+        private System.Windows.Forms.Label lblDuration;
     }
 }

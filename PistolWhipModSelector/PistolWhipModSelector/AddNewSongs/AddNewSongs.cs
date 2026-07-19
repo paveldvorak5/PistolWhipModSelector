@@ -26,6 +26,8 @@ namespace PistolWhipModSelector.AddNewSongs
         {
             foreach (string file in fileList)
             {
+                if (string.IsNullOrEmpty(file))
+                    continue; // skip null/empty entries per chosen behavior
                 string ext = Path.GetExtension(file).ToLower();
                 if (ext != ".wem" && ext != ".mp3")
                     return false;
