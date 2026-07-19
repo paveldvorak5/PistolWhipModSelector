@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>PistolWhipModSelector</RootNamespace>
     <AssemblyName>PistolWhipModSelector</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -28,6 +28,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -61,6 +63,9 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ManagedBass, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedBass.4.0.2\lib\net45\ManagedBass.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -101,6 +106,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Pictures.resx</DependentUpon>
     </Compile>
+    <Compile Include="Player\BassAudioPlayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveOriginalFiles\AudioLineProperties.cs" />
@@ -114,9 +120,6 @@
     <EmbeddedResource Include="GamePath\SetGameFolderPathForm.resx">
       <DependentUpon>SetGameFolderPathForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Pictures.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Pictures.Designer.cs</LastGenOutput>
@@ -129,8 +132,10 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="ClassDiagram1.cd" />
+    <None Include="packages.config" />
     <None Include="PistolWhipModSelector_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

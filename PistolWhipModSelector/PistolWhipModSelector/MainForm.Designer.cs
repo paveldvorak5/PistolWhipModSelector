@@ -2,15 +2,8 @@
 {
     partial class MainForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,12 +13,6 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.OriginalSongShowIDCheckBox = new System.Windows.Forms.CheckBox();
@@ -43,6 +30,8 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.CopyStateLabel = new System.Windows.Forms.Label();
             this.songsTreeView = new System.Windows.Forms.TreeView();
+            this.CustomSongFullPathLabel = new System.Windows.Forms.Label();
+
             ((System.ComponentModel.ISupportInitialize)(this.CustomSongsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,11 +63,10 @@
             // 
             // CustomSongsDataGridView
             // 
-            this.CustomSongsDataGridView.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.CustomSongsDataGridView.AllowUserToAddRows = false;
             this.CustomSongsDataGridView.AllowUserToDeleteRows = false;
-            this.CustomSongsDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.CustomSongsDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CustomSongsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.CustomSongsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -99,150 +87,151 @@
             this.CustomSongsDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.CustomSongsDataGridView_DragDrop);
             this.CustomSongsDataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.CustomSongsDataGridView_DragEnter);
             // 
-            // songTitle
+            // Columns
             // 
             this.songTitle.HeaderText = "Title";
             this.songTitle.Name = "songTitle";
-            // 
-            // songAuthor
-            // 
             this.songAuthor.HeaderText = "Author";
             this.songAuthor.Name = "songAuthor";
-            // 
-            // songPath
-            // 
             this.songPath.HeaderText = "Path";
             this.songPath.Name = "songPath";
             // 
-            // ReloadAllButton
+            // Buttons (placeholders)
             // 
-            this.ReloadAllButton.BackgroundImage = global::PistolWhipModSelector.Pictures.Reload;
-            this.ReloadAllButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ReloadAllButton.Enabled = false;
-            this.ReloadAllButton.Location = new System.Drawing.Point(758, 12);
+            this.ReloadAllButton.Location = new System.Drawing.Point(12, 60);
+            this.ReloadAllButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
             this.ReloadAllButton.Name = "ReloadAllButton";
-            this.ReloadAllButton.Size = new System.Drawing.Size(30, 30);
+            this.ReloadAllButton.Size = new System.Drawing.Size(32, 32);
             this.ReloadAllButton.TabIndex = 4;
             this.ReloadAllButton.UseVisualStyleBackColor = true;
             this.ReloadAllButton.Click += new System.EventHandler(this.ReloadAllButton_Click);
-            // 
-            // CustomSongsResetButton
-            // 
-            this.CustomSongsResetButton.Enabled = false;
-            this.CustomSongsResetButton.Location = new System.Drawing.Point(370, 16);
+
+            this.CustomSongsResetButton.Location = new System.Drawing.Point(410, 402);
+            this.CustomSongsResetButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.CustomSongsResetButton.Name = "CustomSongsResetButton";
             this.CustomSongsResetButton.Size = new System.Drawing.Size(75, 23);
             this.CustomSongsResetButton.TabIndex = 5;
-            this.CustomSongsResetButton.Text = "Reset Song";
+            this.CustomSongsResetButton.Text = "Reset";
             this.CustomSongsResetButton.UseVisualStyleBackColor = true;
             this.CustomSongsResetButton.Click += new System.EventHandler(this.CustomSongsResetButton_Click);
-            // 
-            // CustomSongsReplaceButton
-            // 
-            this.CustomSongsReplaceButton.Enabled = false;
-            this.CustomSongsReplaceButton.Location = new System.Drawing.Point(451, 16);
+
+            this.CustomSongsReplaceButton.Location = new System.Drawing.Point(490, 402);
+            this.CustomSongsReplaceButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.CustomSongsReplaceButton.Name = "CustomSongsReplaceButton";
             this.CustomSongsReplaceButton.Size = new System.Drawing.Size(75, 23);
             this.CustomSongsReplaceButton.TabIndex = 6;
             this.CustomSongsReplaceButton.Text = "Replace";
             this.CustomSongsReplaceButton.UseVisualStyleBackColor = true;
             this.CustomSongsReplaceButton.Click += new System.EventHandler(this.CustomSongsReplaceButton_Click);
-            // 
-            // CustomSongsDeleteButton
-            // 
-            this.CustomSongsDeleteButton.Enabled = false;
-            this.CustomSongsDeleteButton.Location = new System.Drawing.Point(561, 16);
+
+            this.CustomSongsDeleteButton.Location = new System.Drawing.Point(570, 402);
+            this.CustomSongsDeleteButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.CustomSongsDeleteButton.Name = "CustomSongsDeleteButton";
             this.CustomSongsDeleteButton.Size = new System.Drawing.Size(75, 23);
             this.CustomSongsDeleteButton.TabIndex = 7;
             this.CustomSongsDeleteButton.Text = "Delete";
             this.CustomSongsDeleteButton.UseVisualStyleBackColor = true;
             this.CustomSongsDeleteButton.Click += new System.EventHandler(this.CustomSongsDeleteButton_Click);
-            // 
-            // CustomSongsEditButton
-            // 
-            this.CustomSongsEditButton.Enabled = false;
-            this.CustomSongsEditButton.Location = new System.Drawing.Point(642, 16);
+
+            this.CustomSongsEditButton.Location = new System.Drawing.Point(650, 402);
+            this.CustomSongsEditButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.CustomSongsEditButton.Name = "CustomSongsEditButton";
             this.CustomSongsEditButton.Size = new System.Drawing.Size(75, 23);
             this.CustomSongsEditButton.TabIndex = 8;
             this.CustomSongsEditButton.Text = "Edit";
             this.CustomSongsEditButton.UseVisualStyleBackColor = true;
             this.CustomSongsEditButton.Click += new System.EventHandler(this.CustomSongsEditButton_Click);
+
             // 
-            // Creator
+            // Labels
             // 
-            this.Creator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Creator.AutoSize = true;
-            this.Creator.Location = new System.Drawing.Point(668, 440);
-            this.Creator.Name = "Creator";
-            this.Creator.Size = new System.Drawing.Size(126, 13);
-            this.Creator.TabIndex = 9;
-            this.Creator.Text = "Created by PaRcS#2179";
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 440);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(232, 13);
-            this.linkLabel1.TabIndex = 10;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "github.com/JustPaRcS/PistolWhipModSelector";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // CopyStateLabel
-            // 
-            this.CopyStateLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.CopyStateLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.CopyStateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CopyStateLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.CopyStateLabel.Location = new System.Drawing.Point(370, 399);
+            this.CopyStateLabel.Location = new System.Drawing.Point(12, 402);
+            this.CopyStateLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             this.CopyStateLabel.Name = "CopyStateLabel";
-            this.CopyStateLabel.Size = new System.Drawing.Size(418, 29);
-            this.CopyStateLabel.TabIndex = 11;
-            this.CopyStateLabel.Text = "State";
+            this.CopyStateLabel.Size = new System.Drawing.Size(352, 23);
             this.CopyStateLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+
+            this.CustomSongFullPathLabel.Location = new System.Drawing.Point(370, 44);
+            this.CustomSongFullPathLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            this.CustomSongFullPathLabel.Name = "CustomSongFullPathLabel";
+            this.CustomSongFullPathLabel.Size = new System.Drawing.Size(418, 16);
+
             // 
             // songsTreeView
             // 
-            this.songsTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.songsTreeView.Location = new System.Drawing.Point(12, 44);
+            this.songsTreeView.Location = new System.Drawing.Point(12, 70);
+            this.songsTreeView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             this.songsTreeView.Name = "songsTreeView";
-            this.songsTreeView.Size = new System.Drawing.Size(309, 384);
-            this.songsTreeView.TabIndex = 12;
+            this.songsTreeView.Size = new System.Drawing.Size(352, 326);
             this.songsTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.songsTreeView_AfterSelect);
+
+            // Play/Stop buttons
+            this.PlayButton = new System.Windows.Forms.Button();
+            this.StopButton = new System.Windows.Forms.Button();
+            //
+            // PlayButton
+            //
+            this.PlayButton.Location = new System.Drawing.Point(370, 12);
+            this.PlayButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
+            this.PlayButton.Name = "PlayButton";
+            this.PlayButton.Size = new System.Drawing.Size(75, 23);
+            this.PlayButton.TabIndex = 20;
+            this.PlayButton.Text = "Play";
+            this.PlayButton.UseVisualStyleBackColor = true;
+            this.PlayButton.Click += new System.EventHandler(this.PlayButton_Click);
+            //
+            // StopButton
+            //
+            this.StopButton.Location = new System.Drawing.Point(455, 12);
+            this.StopButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
+            this.StopButton.Name = "StopButton";
+            this.StopButton.Size = new System.Drawing.Size(75, 23);
+            this.StopButton.TabIndex = 21;
+            this.StopButton.Text = "Stop";
+            this.StopButton.UseVisualStyleBackColor = true;
+            this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
+            // 
+            // playbackTrackBar
+            // 
+            this.playbackTrackBar = new System.Windows.Forms.TrackBar();
+            this.playbackTrackBar.Location = new System.Drawing.Point(540, 12);
+            this.playbackTrackBar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            this.playbackTrackBar.Name = "playbackTrackBar";
+            this.playbackTrackBar.Size = new System.Drawing.Size(248, 45);
+            this.playbackTrackBar.TabIndex = 22;
+            this.playbackTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.playbackTrackBar.Minimum = 0;
+            this.playbackTrackBar.Maximum = 1000;
+            this.playbackTrackBar.Scroll += new System.EventHandler(this.playbackTrackBar_Scroll);
+            this.playbackTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.playbackTrackBar_MouseDown);
+            this.playbackTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.playbackTrackBar_MouseUp);
+
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 461);
-            this.Controls.Add(this.songsTreeView);
-            this.Controls.Add(this.CopyStateLabel);
-            this.Controls.Add(this.linkLabel1);
-            this.Controls.Add(this.Creator);
-            this.Controls.Add(this.CustomSongsEditButton);
-            this.Controls.Add(this.CustomSongsDeleteButton);
-            this.Controls.Add(this.CustomSongsReplaceButton);
-            this.Controls.Add(this.CustomSongsResetButton);
-            this.Controls.Add(this.ReloadAllButton);
-            this.Controls.Add(this.CustomSongsDataGridView);
-            this.Controls.Add(this.OriginalSongShowNameCheckBox);
+            this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.OriginalSongShowIDCheckBox);
-            this.MinimumSize = new System.Drawing.Size(816, 500);
+            this.Controls.Add(this.OriginalSongShowNameCheckBox);
+            this.Controls.Add(this.CustomSongsDataGridView);
+            this.Controls.Add(this.ReloadAllButton);
+            this.Controls.Add(this.CustomSongsResetButton);
+            this.Controls.Add(this.CustomSongsReplaceButton);
+            this.Controls.Add(this.CustomSongsDeleteButton);
+            this.Controls.Add(this.CustomSongsEditButton);
+            this.Controls.Add(this.CopyStateLabel);
+            this.Controls.Add(this.songsTreeView);
+            this.Controls.Add(this.CustomSongFullPathLabel);
+            this.Controls.Add(this.PlayButton);
+            this.Controls.Add(this.StopButton);
+            this.Controls.Add(this.playbackTrackBar);
             this.Name = "MainForm";
-            this.Text = "Pistol Whip Custom Songs";
             this.Load += new System.EventHandler(this.MainForm_Load);
+
             ((System.ComponentModel.ISupportInitialize)(this.CustomSongsDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
-        #endregion
         private System.Windows.Forms.CheckBox OriginalSongShowIDCheckBox;
         private System.Windows.Forms.CheckBox OriginalSongShowNameCheckBox;
         private System.Windows.Forms.DataGridView CustomSongsDataGridView;
@@ -258,6 +247,9 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label CopyStateLabel;
         private System.Windows.Forms.TreeView songsTreeView;
+        private System.Windows.Forms.Label CustomSongFullPathLabel;
+        private System.Windows.Forms.Button PlayButton;
+        private System.Windows.Forms.Button StopButton;
+        private System.Windows.Forms.TrackBar playbackTrackBar;
     }
 }
-

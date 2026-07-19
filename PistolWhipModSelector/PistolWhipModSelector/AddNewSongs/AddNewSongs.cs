@@ -16,17 +16,18 @@ namespace PistolWhipModSelector.AddNewSongs
 
         public AddNewSongs(string[] fileList)
         {
-            if (this.CheckIfFilesAreWem(fileList))
+            if (this.CheckIfFilesAreSupported(fileList))
             {
                 this.OpenAddNewSongsForm(fileList);
             }
         }
 
-        private bool CheckIfFilesAreWem(string[] fileList)
+        private bool CheckIfFilesAreSupported(string[] fileList)
         {
-            foreach(string file in fileList)
+            foreach (string file in fileList)
             {
-                if (!file.EndsWith(".wem"))
+                string ext = Path.GetExtension(file).ToLower();
+                if (ext != ".wem" && ext != ".mp3")
                     return false;
             }
             return true;
@@ -72,7 +73,11 @@ namespace PistolWhipModSelector.AddNewSongs
             string targetFolderPath = GlobalVariables.GetCustomSongFolderPath(GlobalVariables.CurrentID);
             string targetFileName = GlobalVariables.CurrentID + "-" + songProperties.SongTitle + "-" + songProperties.SongAuthor;
 
-            return targetFolderPath + "\\" + targetFileName + ".wem";
+            string sourceExt = Path.GetExtension(songProperties.SongDestinationPath);
+            if (String.IsNullOrWhiteSpace(sourceExt))
+                sourceExt = ".wem";
+
+            return targetFolderPath + "\\" + targetFileName + sourceExt;
         }
 
         private void CopyFileToTarget(string destinationPath, string targetPath)
