@@ -131,7 +131,6 @@ namespace PistolWhipModSelector.Player
                 // Some vgmstream-created BASS streams play normally but do not
                 // expose a changing byte position. Keep the UI moving in that case.
                 double result = bassPosition > 0.0 ? bassPosition : clockPosition;
-                Log($"GetPosition: pos={pos}, bassPosition={bassPosition:F3}, clockPosition={clockPosition:F3}, result={result:F3}");
                 return result;
             }
             catch (Exception ex) { Log("GetPosition: exception: " + ex.Message); return 0.0; }
@@ -146,7 +145,6 @@ namespace PistolWhipModSelector.Player
                 if (len > 0)
                 {
                     double seconds = Bass.ChannelBytes2Seconds(stream, len);
-                    Log($"GetDuration: len={len}, seconds={seconds:F3}");
                     return seconds;
                 }
 

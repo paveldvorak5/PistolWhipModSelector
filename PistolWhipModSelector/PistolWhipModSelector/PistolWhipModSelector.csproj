@@ -120,6 +120,9 @@
     <EmbeddedResource Include="GamePath\SetGameFolderPathForm.resx">
       <DependentUpon>SetGameFolderPathForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pictures.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Pictures.Designer.cs</LastGenOutput>
